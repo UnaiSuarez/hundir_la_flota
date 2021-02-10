@@ -5,301 +5,392 @@ import com.company.clases.Barcos.Acorazado;
 import com.company.clases.Barcos.Destructor;
 import com.company.clases.Barcos.Mina;
 import com.company.clases.Barcos.Portaaviones;
+import com.company.clases.Jugador;
 import com.company.clases.Orientacion;
 
-import javax.net.ssl.SSLContext;
+
+import java.util.Calendar;
+import java.util.Random;
 import java.util.Scanner;
 
 public class GestorColocacion {
-    private int numTotalBarcos = 10;
-    private int numAcorazados = 2;
-    private int numMinas = 4;
-    private int numDestructor = 3;
-    private int numPortaaviones = 1;
 
-    int tamTablero = 10;
 
     String ANSI_RESET = "\u001B[0m";
     String ANSI_BLUE = "\u001B[34m";
-    String ANSI_BLACK = "\u001B[30m";
 
 
-    public void colocarBarco(Barco[][] tablero){
-        if (numTotalBarcos == 0){
-            mostrarTablero(tablero);
+    public void menuPrincipal(Jugador jugador){
+        if (jugador.isGestionable()){
+            menuBarcos(jugador);
+        }
+        else menuBarcosBot(jugador);
+
+    }
+
+    private void menuBarcos(Jugador jugador){
+        if (jugador.getNumTotalBarcos() == 0){
+            mostrarTablero(jugador);
         }
         else {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Elija un barco:");
-            System.out.println("1) Portaaviones: "+numPortaaviones);
-            System.out.println("2) Destructor: "+numDestructor);
-            System.out.println("3) Acorazado: "+numAcorazados);
-            System.out.println("4) Minas: "+numMinas);
+            System.out.println("1) Portaaviones: "+jugador.getNumPortaaviones());
+            System.out.println("2) Destructor: "+jugador.getNumDestructor());
+            System.out.println("3) Acorazado: "+jugador.getNumAcorazados());
+            System.out.println("4) Minas: "+jugador.getNumMinas());
             System.out.println("5) Salir");
+            System.out.print("Opcion:");
             String opcion = scanner.nextLine();
-            if (opcion.equals("1")){
-                colocarPortaaviones(tablero);
+            switch (opcion) {
+                case "1" -> colocarBarco(Portaaviones.class, jugador);
+                case "2" -> colocarBarco(Destructor.class, jugador);
+                case "3" -> colocarBarco(Acorazado.class, jugador);
+                case "4" -> colocarBarco(Mina.class, jugador);
+                case "5" -> mostrarTablero(jugador);
+                default -> {
+                    System.out.println(opcion + " no es una opcion");
+                    menuBarcos(jugador);
+                }
             }
-            else if (opcion.equals("2")){
-                colocarDestructor(tablero);
+
+        }
+    }
+
+    private void menuBarcosBot(Jugador jugador){
+        while (jugador.getNumTotalBarcos() > 0){
+            if (jugador.getNumPortaaviones() > 0){
+                colocarBarcosBot(Portaaviones.class, jugador);
             }
-            else if (opcion.equals("3")){
-colocarAcorazado(tablero);
+            if (jugador.getNumAcorazados() > 0){
+                colocarBarcosBot(Acorazado.class, jugador);
             }
-            else if (opcion.equals("4")){
-colocarMinas(tablero);
+            if (jugador.getNumDestructor() > 0){
+                colocarBarcosBot(Destructor.class, jugador);
             }
-            else if (opcion.equals("5")){
-mostrarTablero(tablero);
-            }
-            else {
-                System.out.println(opcion+" no es una opcion");
-                colocarBarco(tablero);
+            if (jugador.getNumMinas() > 0){
+                colocarBarcosBot(Mina.class, jugador);
             }
         }
     }
 
-    public void colocarDestructor(Barco[][] tablero){
-        if (numDestructor != 0){
-                Scanner scanner = new Scanner(System.in);
-                mostrarTablero(tablero);
-                System.out.println("Elije una posición:");
-                System.out.print("Posicion x:");
-                int x = Integer.parseInt(scanner.nextLine());
-                System.out.print("Posicion y:");
-                int y = Integer.parseInt(scanner.nextLine());
-                System.out.print("Orientación:");
-                String posicion = scanner.nextLine();
-                if (posicion.equals("horizontal")){
-                    Barco destructor = new Destructor(x,y, Orientacion.HORIZONTAL);
-                    boolean hueco = true;
-                    for (int e = 0; e < destructor.getNumCeldas(); e++) {
-                        try {
-                            if (tablero[destructor.getX()+e][destructor.getY()] != null){
-                                hueco = false;
-                            }
-                        } catch (Exception exception) {
-                            System.out.println("Fuera del tablero");
-                            colocarBarco(tablero);
-                        }
+    private void colocarBarco(Class type, Jugador jugador){
+        Barco barco = generate(type, jugador);
+        /*
+        colocarBarcos(tablero,barco,numPortaaviones,numDestructor,numAcorazados,numMinas,numTotalBarcos);
+         */
 
+        if (barco.getOrientacion() == Orientacion.HORIZONTAL){
+            boolean hueco = true;
+            for (int e = 0; e < barco.getNumCeldas(); e++) {
+                try {
+                    if (jugador.getTablero()[barco.getX()+e][barco.getY()] != null){
+                        hueco = false;
                     }
-                    if (hueco == false){
-                        System.out.println("no es posible colocar el barco");
-                    }
-                    else if (hueco == true){
-                        for (int o = 0; o < destructor.getNumCeldas(); o++) {
-                            tablero[destructor.getX()+o][destructor.getY()] = destructor;
-                        }
-                        numDestructor--;
-                        numTotalBarcos--;
-                    }
-                }
-                else {
-                    Barco destructor = new Destructor(x,y,Orientacion.VERTICAL);
-                    boolean hueco = true;
-                    for (int e = 0; e < destructor.getNumCeldas(); e++) {
-                        try {
-                            if (tablero[destructor.getX()][destructor.getY()+e] != null){
-                                hueco = false;
-                            }
-                        } catch (Exception exception) {
-                            System.out.println("Fuera del tablero");
-                            colocarBarco(tablero);
-                        }
-                    }
-                    if (hueco == false){
-                        System.out.println("no es posible colocar el barco");
-                    }
-                    else if (hueco == true){
-                        for (int o = 0; o < destructor.getNumCeldas(); o++) {
-                            tablero[destructor.getX()][destructor.getY()+o] = destructor;
-                        }
-                        numDestructor--;
-                        numTotalBarcos--;
-                    }
-                }
-        }
-        else {
-            System.out.println("no te quedan destructores");
-        }
-        colocarBarco(tablero);
-    }
-
-    public void colocarPortaaviones(Barco[][] tablero){
-        if (numPortaaviones != 0){
-            Scanner scanner = new Scanner(System.in);
-            mostrarTablero(tablero);
-            System.out.println("Elije una posición:");
-            System.out.print("Posicion x:");
-            int x = Integer.parseInt(scanner.nextLine());
-            System.out.print("Posicion y:");
-            int y = Integer.parseInt(scanner.nextLine());
-            System.out.print("Orientación:");
-            String posicion = scanner.nextLine();
-            if (posicion.equals("horizontal")){
-                Barco portaaviones = new Portaaviones(x,y, Orientacion.HORIZONTAL);
-                boolean hueco = true;
-                for (int e = 0; e < portaaviones.getNumCeldas(); e++) {
-                    try {
-                        if (tablero[portaaviones.getX()+e][portaaviones.getY()] != null){
-                            hueco = false;
-                        }
-                    } catch (Exception exception) {
-                        System.out.println("Fuera del tablero");
-                        colocarBarco(tablero);
-                    }
-                }
-                if (hueco == false){
-                    System.out.println("no es posible colocar el barco");
-                }
-                else if (hueco == true){
-                    for (int o = 0; o < portaaviones.getNumCeldas(); o++) {
-                        tablero[portaaviones.getX()+o][portaaviones.getY()] = portaaviones;
-                    }
-                    numPortaaviones--;
-                    numTotalBarcos--;
+                } catch (Exception exception) {
+                    System.out.println("Fuera del tablero");
+                    menuBarcos(jugador);
                 }
             }
-            else {
-                Barco portaaviones = new Portaaviones(x,y,Orientacion.VERTICAL);
-                boolean hueco = true;
-                for (int e = 0; e < portaaviones.getNumCeldas(); e++) {
-                    try {
-                        if (tablero[portaaviones.getX()][portaaviones.getY()+e] != null){
-                            hueco = false;
-                        }
-                    } catch (Exception exception) {
-                        System.out.println("fuera del tablero");
-                        colocarBarco(tablero);
-                    }
-
+            if (!hueco){
+                System.out.println("no es posible colocar el barco");
+            }
+            else if (hueco){
+                for (int o = 0; o < barco.getNumCeldas(); o++) {
+                    jugador.getTablero()[barco.getX()+o][barco.getY()] = barco;
                 }
-                if (hueco == false){
-                    System.out.println("no es posible colocar el barco");
-                }
-                else if (hueco == true){
-                    for (int o = 0; o < portaaviones.getNumCeldas(); o++) {
-                            tablero[portaaviones.getX()][portaaviones.getY()+o] = portaaviones;
-                    }
-                    numPortaaviones--;
-                    numTotalBarcos--;
-                }
+                jugador.resta(type);
             }
         }
         else {
-            System.out.println("no te quedan portaaviones");
+            boolean hueco = true;
+            for (int e = 0; e < barco.getNumCeldas(); e++) {
+                try {
+                    if (jugador.getTablero()[barco.getX()][barco.getY()+e] != null){
+                        hueco = false;
+                    }
+                } catch (Exception exception) {
+                    System.out.println("fuera del tablero");
+                    menuBarcos(jugador);
+                }
+
+            }
+            if (!hueco){
+                System.out.println("no es posible colocar el barco");
+            }
+            else if (hueco){
+                for (int o = 0; o < barco.getNumCeldas(); o++) {
+                    jugador.getTablero()[barco.getX()][barco.getY()+o] = barco;
+                }
+                jugador.resta(type);
+            }
         }
-        colocarBarco(tablero);
+        menuBarcos(jugador);
+
+
     }
 
-
-    public void colocarAcorazado(Barco[][] tablero) {
-        if (numAcorazados != 0) {
-            Scanner scanner = new Scanner(System.in);
-            mostrarTablero(tablero);
-            System.out.println("Elije una posición:");
-            System.out.print("Posicion x:");
-            int x = Integer.parseInt(scanner.nextLine());
-            System.out.print("Posicion y:");
-            int y = Integer.parseInt(scanner.nextLine());
-            System.out.print("Orientación:");
-            String posicion = scanner.nextLine();
-            if (posicion.equals("horizontal")) {
-                Barco acorazado = new Acorazado(x, y, Orientacion.HORIZONTAL);
-                boolean hueco = true;
-                for (int e = 0; e < acorazado.getNumCeldas(); e++) {
-                    try {
-                        if (tablero[acorazado.getX() + e][acorazado.getY()] != null) {
-                            hueco = false;
-                        }
-                    } catch (Exception exception) {
-                        System.out.println("Fuera del tablero");
-                        colocarBarco(tablero);
+   /* private void colocarBarcos(Barco[][] tablero, Barco barco, int numPortaaviones, int numDestructor, int numAcorazados, int numMinas, int numTotalBarcos){
+        if (barco.getOrientacion() == Orientacion.HORIZONTAL){
+            boolean hueco = true;
+            for (int e = 0; e < barco.getNumCeldas(); e++) {
+                try {
+                    if (tablero[barco.getX()+e][barco.getY()] != null){
+                        hueco = false;
                     }
+                } catch (Exception exception) {
+                    System.out.println("Fuera del tablero");
+                    if (tablero == tableroBot){
+                        menuBarcosBot();
+                    }
+                    else menuBarcos();
                 }
-                if (hueco == false) {
-                    System.out.println("no es posible colocar el barco");
-                } else if (hueco == true) {
-                    for (int o = 0; o < acorazado.getNumCeldas(); o++) {
-                        tablero[acorazado.getX() + o][acorazado.getY()] = acorazado;
-                    }
+            }
+            if (!hueco){
+                System.out.println("no es posible colocar el barco");
+            }
+            else if (hueco){
+                for (int o = 0; o < barco.getNumCeldas(); o++) {
+                    tablero[barco.getX()+o][barco.getY()] = barco;
+                }
+                if(barco.getClass()==Portaaviones.class) {
+                    numPortaaviones--;
+                }
+                else if(barco.getClass()==Destructor.class) {
+                    numDestructor--;
+                }
+                else if(barco.getClass()==Acorazado.class) {
                     numAcorazados--;
-                    numTotalBarcos--;
                 }
-            } else {
-                Barco acorazado = new Acorazado(x, y, Orientacion.VERTICAL);
-                boolean hueco = true;
-                for (int e = 0; e < acorazado.getNumCeldas(); e++) {
-                    try {
-                        if (tablero[acorazado.getX()][acorazado.getY() + e] != null) {
-                            hueco = false;
-                        }
-                    } catch (Exception exception) {
-                        System.out.println("fuera del tablero");
-                        colocarBarco(tablero);
-                    }
-                    if (hueco == false) {
-                        System.out.println("no es posible colocar el barco");
-                    } else if (hueco == true) {
-                        for (int o = 0; o < acorazado.getNumCeldas(); o++) {
-                            tablero[acorazado.getX()][acorazado.getY() + o] = acorazado;
-                        }
-                        numAcorazados--;
-                        numTotalBarcos--;
-                    }
+                else if(barco.getClass()==Mina.class) {
+                    numMinas--;
                 }
+                numTotalBarcos--;
             }
         }
-        else{
-                System.out.println("no te quedan acorazados");
-            }
-            colocarBarco(tablero);
+        else {
+            boolean hueco = true;
+            for (int e = 0; e < barco.getNumCeldas(); e++) {
+                try {
+                    if (tablero[barco.getX()][barco.getY()+e] != null){
+                        hueco = false;
+                    }
+                } catch (Exception exception) {
+                    System.out.println("fuera del tablero");
+                    if (tablero == tableroBot){
+                        menuBarcosBot();
+                    }
+                    else menuBarcos();
+                }
 
+            }
+            if (!hueco){
+                System.out.println("no es posible colocar el barco");
+            }
+            else if (hueco){
+                for (int o = 0; o < barco.getNumCeldas(); o++) {
+                    tablero[barco.getX()][barco.getY()+o] = barco;
+                }
+                if(barco.getClass()==Portaaviones.class) {
+                    numPortaaviones--;
+                }
+                else if(barco.getClass()==Destructor.class) {
+                    numDestructor--;
+                }
+                else if(barco.getClass()==Acorazado.class) {
+                    numAcorazados--;
+                }
+                else if(barco.getClass()==Mina.class) {
+                    numMinas--;
+                }
+
+                numTotalBarcos--;
+            }
+        }
+        if (tablero == tableroBot){
+            menuBarcosBot();
+        }
+        else menuBarcos();
     }
 
-    public void colocarMinas(Barco[][] tablero){
-        if (numMinas != 0){
-            Scanner scanner = new Scanner(System.in);
-            mostrarTablero(tablero);
-            System.out.println("Elije una posición:");
-            System.out.print("Posicion x:");
-            int x = Integer.parseInt(scanner.nextLine());
-            System.out.print("Posicion y:");
-            int y = Integer.parseInt(scanner.nextLine());
-            Barco mina = new Mina(x,y, Orientacion.HORIZONTAL);
-                boolean hueco = true;
-                if (tablero[mina.getX()][mina.getY()] != null){
+
+    */
+
+private void colocarBarcosBot(Class type, Jugador jugador){
+    Barco barco = generateBot(type);
+    /*
+    colocarBarcos(tableroBot,barco,numPortaavionesBot,numDestructorBot,numAcorazadosBot,numMinasBot,numTotalBarcosBot);
+
+     */
+
+    if (barco.getOrientacion() == Orientacion.HORIZONTAL){
+        for (int e = 0; e < barco.getNumCeldas(); e++) {
+            /*
+            try {
+                if (jugador.getTablero()[barco.getX()+e][barco.getY()] != null){
                     hueco = false;
                 }
-                if (hueco == false){
-                    System.out.println("no es posible colocar el barco");
+            } catch (Exception exception) {
+                System.out.println("Fuera del tablero");
+                menuBarcosBot(jugador);
+            }
+
+             */
+            if(jugador.getTablero().length < barco.getX()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()+e][barco.getY()] != null){
+                menuBarcosBot(jugador);
+            }
+            else {
+                for (int o = 0; o < barco.getNumCeldas(); o++) {
+                    jugador.getTablero()[barco.getX()+o][barco.getY()] = barco;
                 }
-                else if (hueco == true){
-                        tablero[mina.getX()][mina.getY()] = mina;
-                    numMinas--;
-                    numTotalBarcos--;
+                jugador.resta(type);
+            }
+        }
+
+    }
+    else {
+        for (int e = 0; e < barco.getNumCeldas(); e++) {
+            /*
+            try {
+                if (jugador.getTablero()[barco.getX()][barco.getY()+e] != null){
+                    hueco = false;
                 }
+            } catch (Exception exception) {
+                System.out.println("fuera del tablero");
+                menuBarcosBot(jugador);
+            }
+
+             */
+            if(jugador.getTablero().length < barco.getY()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()][barco.getY()+e] != null){
+                menuBarcosBot(jugador);
+            }
+            else {
+                for (int o = 0; o < barco.getNumCeldas(); o++) {
+                    jugador.getTablero()[barco.getX()][barco.getY()+o] = barco;
+                }
+                jugador.resta(type);
+            }
         }
-        else {
-            System.out.println("no te quedan minas");
+
+    }
+    menuBarcosBot(jugador);
+
+
+}
+
+private boolean comporbar(Jugador jugador){
+    boolean opcion = true;
+    for (jugador.getTamTablero())
+    return true;
+}
+
+    private Barco generate(Class type, Jugador jugador){
+        mostrarTablero(jugador);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Elije una posición:");
+        System.out.print("Posicion x:");
+        int x = Integer.parseInt(scanner.nextLine());
+        System.out.print("Posicion y:");
+        int y = Integer.parseInt(scanner.nextLine());
+        System.out.print("Orientación:");
+        String posicion = scanner.nextLine();
+        Orientacion orientacion = Orientacion.VERTICAL;
+        if(posicion.equals("horizontal")){
+            orientacion = Orientacion.HORIZONTAL;
         }
-        colocarBarco(tablero);
+        if(Portaaviones.class == type){
+            return new Portaaviones(x,y,orientacion);
+        }
+        else if(Acorazado.class == type){
+            return new Acorazado(x,y,orientacion);
+        }
+        else if(Destructor.class == type){
+            return new Destructor(x,y,orientacion);
+        }
+        else if(Mina.class == type){
+            return new Mina(x,y,orientacion);
+        }
+        else return null;
     }
 
+    private Barco generateBot(Class type){
+        Random random = new Random();
+        int x = random.nextInt(10);
+        int y = random.nextInt(10);
+        Boolean e = new Random().nextBoolean();
+        boolean posicion = e.booleanValue();
+        Orientacion orientacion = Orientacion.VERTICAL;
+        if(posicion){
+            orientacion = Orientacion.HORIZONTAL;
+        }
+        if(Portaaviones.class == type){
+            return new Portaaviones(x,y,orientacion);
+        }
+        else if(Acorazado.class == type){
+            return new Acorazado(x,y,orientacion);
+        }
+        else if(Destructor.class == type){
+            return new Destructor(x,y,orientacion);
+        }
+        else if(Mina.class == type){
+            return new Mina(x,y,orientacion);
+        }
+        else return null;
+    }
 
-
-    public void mostrarTablero(Barco[][] tablero){
+    public void mostrarTablero(Jugador jugador){
+        System.out.println("tablero jugador");
         System.out.print(" ");
-        for (int i = 0; i < tamTablero; i++) {
+        for (int i = 0; i < jugador.getTamTablero(); i++) {
             System.out.print(" "+i);
         }
         System.out.println();
-        for(int x = 0; x < tamTablero; x++){
+        for(int x = 0; x < jugador.getTamTablero(); x++){
             System.out.print(x+" ");
-            for(int y = 0; y < tamTablero; y++){
-                if(tablero[y][x] != null){
-                    System.out.print(ANSI_BLACK+"▓"+ANSI_RESET);
+            for(int y = 0; y < jugador.getTamTablero(); y++){
+                if(jugador.getTablero()[y][x] != null){
+                    Class<? extends Barco> aClass = jugador.getTablero()[y][x].getClass();
+                    if (Portaaviones.class.equals(aClass)) {
+                        System.out.print(Portaaviones.getColor() + "█" + ANSI_RESET);
+                    } else if (Destructor.class.equals(aClass)) {
+                        System.out.print(Destructor.getColor() + "█" + ANSI_RESET);
+                    } else if (Acorazado.class.equals(aClass)) {
+                        System.out.print(Acorazado.getColor() + "█" + ANSI_RESET);
+                    } else if (Mina.class.equals(aClass)) {
+                        System.out.print(Mina.getColor() + "█" + ANSI_RESET);
+                    }
+
+                }
+                else{
+                    System.out.print(ANSI_BLUE+"█"+ANSI_RESET);
+                }
+                System.out.print(" ");
+            }
+            System.out.println("");
+        }
+    }
+
+    public void mostrarTableroBot(Jugador jugador){
+        System.out.println("tablero: "+jugador.getNombre());
+        System.out.print(" ");
+        for (int i = 0; i < jugador.getTamTablero(); i++) {
+            System.out.print(" "+i);
+        }
+        System.out.println();
+        for(int x = 0; x < jugador.getTamTablero(); x++){
+            System.out.print(x+" ");
+            for(int y = 0; y < jugador.getTamTablero(); y++){
+                if(jugador.getTablero()[y][x] != null){
+                    Class<? extends Barco> aClass = jugador.getTablero()[y][x].getClass();
+                    if (Portaaviones.class.equals(aClass)) {
+                        System.out.print(Portaaviones.getColor() + "█" + ANSI_RESET);
+                    } else if (Destructor.class.equals(aClass)) {
+                        System.out.print(Destructor.getColor() + "█" + ANSI_RESET);
+                    } else if (Acorazado.class.equals(aClass)) {
+                        System.out.print(Acorazado.getColor() + "█" + ANSI_RESET);
+                    } else if (Mina.class.equals(aClass)) {
+                        System.out.print(Mina.getColor() + "█" + ANSI_RESET);
+                    }
                 }
                 else{
                     System.out.print(ANSI_BLUE+"█"+ANSI_RESET);

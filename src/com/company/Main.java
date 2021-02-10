@@ -4,6 +4,7 @@ import com.company.clases.Barco;
 import com.company.clases.Barcos.Destructor;
 import com.company.clases.Barcos.Mina;
 import com.company.clases.Barcos.Portaaviones;
+import com.company.clases.Jugador;
 import com.company.clases.Orientacion;
 import com.company.gestores.GestorColocacion;
 
@@ -13,13 +14,14 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        int tamTablero = 10;
+        Jugador jugador1 = new Jugador(false,"bot 1");
+        Jugador jugador2 = new Jugador(false,"bot 2");
 
-        Barco[][] tablero = new Barco[tamTablero][tamTablero];
-
-        GestorColocacion gestorColocacion = new GestorColocacion();
-        gestorColocacion.colocarBarco(tablero);
-        gestorColocacion.mostrarTablero(tablero);
+        GestorColocacion gestorColocacionJugador = new GestorColocacion();
+        gestorColocacionJugador.menuPrincipal(jugador1);
+        gestorColocacionJugador.mostrarTableroBot(jugador1);
+        gestorColocacionJugador.menuPrincipal(jugador2);
+        gestorColocacionJugador.mostrarTableroBot(jugador2);
 
 
     }
