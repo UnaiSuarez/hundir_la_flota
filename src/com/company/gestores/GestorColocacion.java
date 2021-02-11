@@ -222,9 +222,7 @@ private void colocarBarcosBot(Class type, Jugador jugador){
     colocarBarcos(tableroBot,barco,numPortaavionesBot,numDestructorBot,numAcorazadosBot,numMinasBot,numTotalBarcosBot);
 
      */
-
     if (barco.getOrientacion() == Orientacion.HORIZONTAL){
-        for (int e = 0; e < barco.getNumCeldas(); e++) {
             /*
             try {
                 if (jugador.getTablero()[barco.getX()+e][barco.getY()] != null){
@@ -236,7 +234,13 @@ private void colocarBarcosBot(Class type, Jugador jugador){
             }
 
              */
-            if(jugador.getTablero().length < barco.getX()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()+e][barco.getY()] != null){
+            boolean opcion = true;
+            for (int i = 0; i < barco.getNumCeldas() ; i++) {
+                if(jugador.getTablero().length < barco.getY()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()+i][barco.getY()] != null){
+                    opcion =  false;
+                }
+            }
+            if(!opcion){
                 menuBarcosBot(jugador);
             }
             else {
@@ -245,11 +249,10 @@ private void colocarBarcosBot(Class type, Jugador jugador){
                 }
                 jugador.resta(type);
             }
-        }
+
 
     }
     else {
-        for (int e = 0; e < barco.getNumCeldas(); e++) {
             /*
             try {
                 if (jugador.getTablero()[barco.getX()][barco.getY()+e] != null){
@@ -261,7 +264,13 @@ private void colocarBarcosBot(Class type, Jugador jugador){
             }
 
              */
-            if(jugador.getTablero().length < barco.getY()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()][barco.getY()+e] != null){
+            boolean opcion = true;
+            for (int i = 0; i < barco.getNumCeldas() ; i++) {
+                if(jugador.getTablero().length < barco.getY()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()][barco.getY()+i] != null){
+                    opcion =  false;
+                }
+            }
+            if(!opcion){
                 menuBarcosBot(jugador);
             }
             else {
@@ -270,18 +279,12 @@ private void colocarBarcosBot(Class type, Jugador jugador){
                 }
                 jugador.resta(type);
             }
-        }
+
 
     }
     menuBarcosBot(jugador);
 
 
-}
-
-private boolean comporbar(Jugador jugador){
-    boolean opcion = true;
-    for (jugador.getTamTablero())
-    return true;
 }
 
     private Barco generate(Class type, Jugador jugador){
