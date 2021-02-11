@@ -6,6 +6,7 @@ import com.company.clases.Barcos.Mina;
 import com.company.clases.Barcos.Portaaviones;
 import com.company.clases.Jugador;
 import com.company.clases.Orientacion;
+import com.company.gestores.GestorAtaque;
 import com.company.gestores.GestorColocacion;
 
 import javax.xml.transform.sax.SAXResult;
@@ -18,10 +19,12 @@ public class Main {
         Jugador jugador2 = new Jugador(false,"bot 2");
 
         GestorColocacion gestorColocacionJugador = new GestorColocacion();
+        GestorAtaque gestorAtaque = new GestorAtaque();
         gestorColocacionJugador.menuPrincipal(jugador1);
-        gestorColocacionJugador.mostrarTableroBot(jugador1);
         gestorColocacionJugador.menuPrincipal(jugador2);
+        gestorColocacionJugador.mostrarTableroBot(jugador1);
         gestorColocacionJugador.mostrarTableroBot(jugador2);
+        gestorAtaque.ataque(jugador1,jugador2);
 
 
     }

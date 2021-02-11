@@ -10,16 +10,19 @@ public class Jugador {
     private boolean gestionable;
     int tamTablero = 10;
     Barco[][] tablero;
+    int[][] tableroAtaque;
     private int numTotalBarcos = 10;
     private int numAcorazados = 2;
     private int numMinas = 4;
     private int numDestructor = 3;
     private int numPortaaviones = 1;
+    private int vida = 24;
 
 
     public Jugador(boolean gestionable, String nombre) {
         this.gestionable = gestionable;
         this.tablero = new Barco[tamTablero][tamTablero];
+        this.tableroAtaque = new int[tamTablero][tamTablero];
         this.nombre = nombre;
     }
 
@@ -38,6 +41,10 @@ public class Jugador {
             }
 
             numTotalBarcos--;
+    }
+
+    public void restaVida(){
+        this.vida--;
     }
 
     public boolean isGestionable() {
@@ -75,4 +82,10 @@ public class Jugador {
     public int getNumPortaaviones() {
         return numPortaaviones;
     }
+
+    public int getVida(){return vida;}
+
+    public int[][] getTableroAtaque(){ return tableroAtaque;}
+
+
 }
