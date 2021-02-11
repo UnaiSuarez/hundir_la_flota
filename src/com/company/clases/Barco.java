@@ -7,7 +7,7 @@ public abstract class Barco {
     protected Orientacion orientacion;
     String color;
 
-    public Barco(Integer numCeldas, Integer x, Integer y,Integer vida, Orientacion orientacion, String color) {
+    public Barco(Integer numCeldas, Integer x, Integer y, Orientacion orientacion, String color) {
         this.numCeldas = numCeldas;
         this.x = x;
         this.y = y;
@@ -30,5 +30,23 @@ public abstract class Barco {
 
     public Orientacion getOrientacion() {
         return orientacion;
+    }
+
+    public Integer getVida() {
+        return vida;
+    }
+
+    protected void setVida(Integer vida) {
+        this.vida = vida;
+    }
+
+    public Boolean restaVida(){
+        this.vida--;
+        if(this.vida == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

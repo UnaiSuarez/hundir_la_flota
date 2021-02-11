@@ -236,7 +236,7 @@ private void colocarBarcosBot(Class type, Jugador jugador){
              */
             boolean opcion = true;
             for (int i = 0; i < barco.getNumCeldas() ; i++) {
-                if(jugador.getTablero().length < barco.getY()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()+i][barco.getY()] != null){
+                if(jugador.getTablero().length < barco.getX()+barco.getNumCeldas() || jugador.getTablero()[barco.getX()+i][barco.getY()] != null){
                     opcion =  false;
                 }
             }
