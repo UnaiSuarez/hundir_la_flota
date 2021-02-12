@@ -40,13 +40,9 @@ public abstract class Barco {
         this.vida = vida;
     }
 
-    public Boolean restaVida(){
+    public void restaVida(){
         this.vida--;
-        if(this.vida == 0){
-            return true;
-        }
-        else{
-            return false;
-        }
     }
+
+
 }

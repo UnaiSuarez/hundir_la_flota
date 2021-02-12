@@ -87,5 +87,9 @@ public class Jugador {
 
     public int[][] getTableroAtaque(){ return tableroAtaque;}
 
+    public Boolean modoJuego(){
+        this.gestionable = true;
+        return true;
+    }
 
 }

@@ -342,38 +342,6 @@ private void colocarBarcosBot(Class type, Jugador jugador){
     }
 
     public void mostrarTablero(Jugador jugador){
-        System.out.println("tablero jugador");
-        System.out.print(" ");
-        for (int i = 0; i < jugador.getTamTablero(); i++) {
-            System.out.print(" "+i);
-        }
-        System.out.println();
-        for(int x = 0; x < jugador.getTamTablero(); x++){
-            System.out.print(x+" ");
-            for(int y = 0; y < jugador.getTamTablero(); y++){
-                if(jugador.getTablero()[y][x] != null){
-                    Class<? extends Barco> aClass = jugador.getTablero()[y][x].getClass();
-                    if (Portaaviones.class.equals(aClass)) {
-                        System.out.print(Portaaviones.getColor() + "█" + ANSI_RESET);
-                    } else if (Destructor.class.equals(aClass)) {
-                        System.out.print(Destructor.getColor() + "█" + ANSI_RESET);
-                    } else if (Acorazado.class.equals(aClass)) {
-                        System.out.print(Acorazado.getColor() + "█" + ANSI_RESET);
-                    } else if (Mina.class.equals(aClass)) {
-                        System.out.print(Mina.getColor() + "█" + ANSI_RESET);
-                    }
-
-                }
-                else{
-                    System.out.print(ANSI_BLUE+"█"+ANSI_RESET);
-                }
-                System.out.print(" ");
-            }
-            System.out.println("");
-        }
-    }
-
-    public void mostrarTableroBot(Jugador jugador){
         System.out.println("tablero: "+jugador.getNombre());
         System.out.print(" ");
         for (int i = 0; i < jugador.getTamTablero(); i++) {
@@ -394,6 +362,7 @@ private void colocarBarcosBot(Class type, Jugador jugador){
                     } else if (Mina.class.equals(aClass)) {
                         System.out.print(Mina.getColor() + "█" + ANSI_RESET);
                     }
+
                 }
                 else{
                     System.out.print(ANSI_BLUE+"█"+ANSI_RESET);
