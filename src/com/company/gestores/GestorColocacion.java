@@ -17,6 +17,7 @@ public class GestorColocacion {
     String ANSI_BLUE = "\u001B[34m";
 
 
+
     public void menuPrincipal(Jugador jugador){
         if (jugador.isGestionable()){
             menuBarcos(jugador);
@@ -351,7 +352,7 @@ private void colocarBarcosBot(Class type, Jugador jugador){
                 if(jugador.getTablero()[x][y] != null){
                     Class<? extends Barco> aClass = jugador.getTablero()[x][y].getClass();
                     if (Portaaviones.class.equals(aClass)) {
-                        System.out.print(Portaaviones.getColor() + "█" + ANSI_RESET);
+                        comprobarDaño(aClass,x);
                     } else if (Destructor.class.equals(aClass)) {
                         System.out.print(Destructor.getColor() + "█" + ANSI_RESET);
                     } else if (Acorazado.class.equals(aClass)) {
@@ -370,9 +371,16 @@ private void colocarBarcosBot(Class type, Jugador jugador){
         }
     }
 
-    private void comprobarDaño(Barco barco, Integer x){
+    private String comprobarDaño(Barco barco, Integer x){
     if (barco.getEstado(x) == Estado.OK){
-        System.out.println();
+        return "█";
     }
+    else if (barco.getEstado(x) == Estado.TOCADO){
+        return "x";
+    }
+    else if (barco.getEstado(x)==Estado.HUNDIDO){
+        return "X";
+    }
+        return null;
     }
 }
