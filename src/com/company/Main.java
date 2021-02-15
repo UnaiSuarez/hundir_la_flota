@@ -22,8 +22,6 @@ public class Main {
         GestorAtaque gestorAtaque = new GestorAtaque();
         gestorColocacionJugador.menuPrincipal(jugador1);
         gestorColocacionJugador.menuPrincipal(jugador2);
-        gestorColocacionJugador.mostrarTablero(jugador1);
-        gestorColocacionJugador.mostrarTablero(jugador2);
         gestorAtaque.ataques(jugador1,jugador2);
 
 

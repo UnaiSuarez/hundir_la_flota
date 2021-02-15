@@ -6,6 +6,7 @@ import com.company.clases.Barcos.Destructor;
 import com.company.clases.Barcos.Mina;
 import com.company.clases.Barcos.Portaaviones;
 import com.company.clases.Jugador;
+import com.company.clases.Orientacion;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -26,9 +27,9 @@ public class GestorAtaque {
                     System.out.println("el jugador "+jugador1.getNombre()+" ha perdido");
                     System.out.println("--------------------------------------------------");
                     System.out.println("los tableros finales han quedado asi");
-                    mostrarTableros(jugador1,jugador2);
+                    mostrarTableros(jugador1);
                     System.out.println("--------------------------------------------------");
-                    mostrarTableros(jugador2,jugador1);
+                    mostrarTableros(jugador2);
                     System.out.println("--------------------------------------------------");
                     break;
                 }
@@ -36,9 +37,9 @@ public class GestorAtaque {
                     System.out.println("el jugador "+jugador2.getNombre()+" ha perdido");
                     System.out.println("--------------------------------------------------");
                     System.out.println("los tableros finales han quedado asi");
-                    mostrarTableros(jugador2,jugador1);
+                    mostrarTableros(jugador2);
                     System.out.println("--------------------------------------------------");
-                    mostrarTableros(jugador1,jugador2);
+                    mostrarTableros(jugador1);
                     System.out.println("--------------------------------------------------");
                     break;
                 }
@@ -82,14 +83,17 @@ private void ataque(Jugador jugadorAtaque,Jugador jugadorAtacado, int tirada){
             jugadorAtaque.getTableroAtaque()[x][y] = 2;
             if (jugadorAtacado.getTablero()[x][y].getVida() > 0){
                 jugadorAtacado.getTablero()[x][y].restaVida();
-                System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
+                System.out.println("\n");
                 if (jugadorAtacado.getTablero()[x][y].getVida() == 0) {
-                    mostrarTableros(jugadorAtaque,jugadorAtacado);
+                    System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
                     System.out.println("hundido");
+                    cambioTablero(jugadorAtacado,x,y);
+                    mostrarTableros(jugadorAtaque);
                 }
                 else {
-                    mostrarTableros(jugadorAtaque,jugadorAtacado);
+                    System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
                     System.out.println("tocado");
+                    mostrarTableros(jugadorAtaque);
                 }
 
                 jugadorAtacado.restaVida();
@@ -97,22 +101,27 @@ private void ataque(Jugador jugadorAtaque,Jugador jugadorAtacado, int tirada){
 
         }
         else {
+            System.out.println("\n");
             jugadorAtaque.getTableroAtaque()[x][y] = 1;
-            mostrarTableros(jugadorAtaque,jugadorAtacado);
             System.out.println(jugadorAtaque.getNombre() + " ha atacado la posicion x:" + x + ", y:" + y+" en la tirada:"+tirada);
             System.out.println("agua");
+            mostrarTableros(jugadorAtaque);
         }
     }
     else {
+        /*
        mostrarTableros(jugadorAtaque,jugadorAtacado);
         System.out.println(jugadorAtaque.getNombre()+" ha repetido el tiro, "+tirada);
         tirada--;
+        System.out.println("\n");
         ataque(jugadorAtaque,jugadorAtacado,tirada);
+
+         */
     }
 
 }
 
-private void mostrarTableros(Jugador jugadorAtaque, Jugador jugadorAtacado){
+private void mostrarTableros(Jugador jugadorAtaque){
     System.out.println("tablero basrcos:");
         gestorColocacionJugador.mostrarTablero(jugadorAtaque);
     System.out.println("tablero ataque: ");
@@ -123,11 +132,11 @@ private void mostrarTableros(Jugador jugadorAtaque, Jugador jugadorAtacado){
     System.out.println();
     for(int x = 0; x < jugadorAtaque.getTamTablero(); x++){
         System.out.print(x+" ");
-        for(int y = 0; y < jugadorAtacado.getTamTablero(); y++){
-            if(jugadorAtacado.getTableroAtaque()[y][x] == 1){
+        for(int y = 0; y < jugadorAtaque.getTamTablero(); y++){
+            if(jugadorAtaque.getTableroAtaque()[y][x] == 1){
                 System.out.print(ANSI_WHITE+"█"+ANSI_RESET);
             }
-            else if (jugadorAtacado.getTableroAtaque()[y][x] == 2){
+            else if (jugadorAtaque.getTableroAtaque()[y][x] == 2){
                 System.out.print(ANSI_RED+"█"+ANSI_RESET);
             }
             else{
@@ -137,7 +146,18 @@ private void mostrarTableros(Jugador jugadorAtaque, Jugador jugadorAtacado){
         }
         System.out.println("");
     }
-    System.out.println("\n\n\n");
+}
+
+private void cambioTablero(Jugador jugador, int x, int y){
+    Orientacion orientacion = jugador.getTablero()[x][y].getOrientacion();
+    if (orientacion == Orientacion.VERTICAL){
+        Integer yMostrar = jugador.getTablero()[x][y].getY() - y;
+        jugador.getTablero()[x][y].aplicaDaño(yMostrar);
+    }
+    else {
+        Integer xMostrar = jugador.getTablero()[x][y].getY() - x;
+        jugador.getTablero()[x][y].aplicaDaño(xMostrar);
+    }
 
 
 }

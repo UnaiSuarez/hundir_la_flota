@@ -1,10 +1,7 @@
 package com.company.gestores;
 
 import com.company.clases.Barco;
-import com.company.clases.Barcos.Acorazado;
-import com.company.clases.Barcos.Destructor;
-import com.company.clases.Barcos.Mina;
-import com.company.clases.Barcos.Portaaviones;
+import com.company.clases.Barcos.*;
 import com.company.clases.Jugador;
 import com.company.clases.Orientacion;
 
@@ -351,8 +348,8 @@ private void colocarBarcosBot(Class type, Jugador jugador){
         for(int x = 0; x < jugador.getTamTablero(); x++){
             System.out.print(x+" ");
             for(int y = 0; y < jugador.getTamTablero(); y++){
-                if(jugador.getTablero()[y][x] != null){
-                    Class<? extends Barco> aClass = jugador.getTablero()[y][x].getClass();
+                if(jugador.getTablero()[x][y] != null){
+                    Class<? extends Barco> aClass = jugador.getTablero()[x][y].getClass();
                     if (Portaaviones.class.equals(aClass)) {
                         System.out.print(Portaaviones.getColor() + "█" + ANSI_RESET);
                     } else if (Destructor.class.equals(aClass)) {
@@ -373,4 +370,9 @@ private void colocarBarcosBot(Class type, Jugador jugador){
         }
     }
 
+    private void comprobarDaño(Barco barco, Integer x){
+    if (barco.getEstado(x) == Estado.OK){
+        System.out.println();
+    }
+    }
 }
