@@ -20,8 +20,8 @@ public class GestorAtaque {
     String ANSI_BLUE = "\u001B[34m";
     String ANSI_WHITE = "\033[0m";
     String ANSI_RED = "\u001B[33m";
+    int tirada = 0;
     public void ataques(Jugador jugador1, Jugador jugador2){
-            int tirada = 0;
             while (jugador1.getVida() >= 0 || jugador2.getVida() >=0){
                 if (jugador1.getVida() == 0){
                     System.out.println("el jugador "+jugador1.getNombre()+" ha perdido");
@@ -46,18 +46,20 @@ public class GestorAtaque {
 
                 else {
                     if (tirada%2 == 0){
-                        ataque(jugador1,jugador2,tirada);
+                        if(ataque(jugador1,jugador2)){
+                            tirada++;
+                        }
                     }
                     else {
-                        ataque(jugador2,jugador1,tirada);
+                        if(ataque(jugador2,jugador1)){
+                            tirada++;
+                        }
                     }
                 }
-                tirada++;
-
             }
     }
 
-private void ataque(Jugador jugadorAtaque,Jugador jugadorAtacado, int tirada){
+private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
     try {
         TimeUnit.MILLISECONDS.sleep(1);
     } catch (InterruptedException e) {
@@ -93,6 +95,7 @@ private void ataque(Jugador jugadorAtaque,Jugador jugadorAtacado, int tirada){
                 else {
                     System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
                     System.out.println("tocado");
+                    cambioTablero(jugadorAtacado,x,y);
                     mostrarTableros(jugadorAtaque);
                 }
 
@@ -109,16 +112,10 @@ private void ataque(Jugador jugadorAtaque,Jugador jugadorAtacado, int tirada){
         }
     }
     else {
-        /*
-       mostrarTableros(jugadorAtaque,jugadorAtacado);
         System.out.println(jugadorAtaque.getNombre()+" ha repetido el tiro, "+tirada);
-        tirada--;
-        System.out.println("\n");
-        ataque(jugadorAtaque,jugadorAtacado,tirada);
-
-         */
+        return false;
     }
-
+    return true;
 }
 
 private void mostrarTableros(Jugador jugadorAtaque){
@@ -151,11 +148,11 @@ private void mostrarTableros(Jugador jugadorAtaque){
 private void cambioTablero(Jugador jugador, int x, int y){
     Orientacion orientacion = jugador.getTablero()[x][y].getOrientacion();
     if (orientacion == Orientacion.VERTICAL){
-        Integer yMostrar = jugador.getTablero()[x][y].getY() - y;
+        Integer yMostrar = y -jugador.getTablero()[x][y].getY();
         jugador.getTablero()[x][y].aplicaDaño(yMostrar);
     }
     else {
-        Integer xMostrar = jugador.getTablero()[x][y].getY() - x;
+        Integer xMostrar = x - jugador.getTablero()[x][y].getX();
         jugador.getTablero()[x][y].aplicaDaño(xMostrar);
     }
 

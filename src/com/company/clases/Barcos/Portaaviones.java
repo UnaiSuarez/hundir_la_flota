@@ -14,7 +14,5 @@ public class Portaaviones extends Barco {
         setVida(6);
     }
 
-    public static String getColor() {
-        return color;
-    }
+
 }

@@ -44,6 +44,10 @@ public abstract class Barco {
         return vida;
     }
 
+    public String getColor() {
+        return color;
+    }
+
     protected void setVida(Integer vida) {
         this.vida = vida;
     }

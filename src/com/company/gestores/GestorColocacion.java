@@ -350,15 +350,15 @@ private void colocarBarcosBot(Class type, Jugador jugador){
             System.out.print(x+" ");
             for(int y = 0; y < jugador.getTamTablero(); y++){
                 if(jugador.getTablero()[x][y] != null){
-                    Class<? extends Barco> aClass = jugador.getTablero()[x][y].getClass();
-                    if (Portaaviones.class.equals(aClass)) {
-                        comprobarDaño(aClass,x);
-                    } else if (Destructor.class.equals(aClass)) {
-                        System.out.print(Destructor.getColor() + "█" + ANSI_RESET);
-                    } else if (Acorazado.class.equals(aClass)) {
-                        System.out.print(Acorazado.getColor() + "█" + ANSI_RESET);
-                    } else if (Mina.class.equals(aClass)) {
-                        System.out.print(Mina.getColor() + "█" + ANSI_RESET);
+                    Barco barco = jugador.getTablero()[x][y];
+                    if (Portaaviones.class.equals(barco.getClass())) {
+                        System.out.print(barco.getColor()+comprobarDaño(barco,x, y)+ANSI_RESET);
+                    } else if (Destructor.class.equals(barco.getClass())) {
+                        System.out.print(barco.getColor()+comprobarDaño(barco,x, y)+ANSI_RESET);
+                    } else if (Acorazado.class.equals(barco.getClass())) {
+                        System.out.print(barco.getColor()+comprobarDaño(barco,x, y)+ANSI_RESET);
+                    } else if (Mina.class.equals(barco.getClass())) {
+                        System.out.print(barco.getColor()+comprobarDaño(barco,x, y)+ANSI_RESET);
                     }
 
                 }
@@ -371,14 +371,21 @@ private void colocarBarcosBot(Class type, Jugador jugador){
         }
     }
 
-    private String comprobarDaño(Barco barco, Integer x){
-    if (barco.getEstado(x) == Estado.OK){
+    private String comprobarDaño(Barco barco, int x, int y){
+    int desfase = 0;
+    if(barco.getOrientacion() == Orientacion.VERTICAL){
+        desfase = y - barco.getY();
+    }
+    else{
+        desfase = x - barco.getX();
+    }
+    if (barco.getEstado(desfase) == Estado.OK){
         return "█";
     }
-    else if (barco.getEstado(x) == Estado.TOCADO){
-        return "x";
+    else if (barco.getEstado(desfase) == Estado.TOCADO){
+        return "~";
     }
-    else if (barco.getEstado(x)==Estado.HUNDIDO){
+    else if (barco.getEstado(desfase)==Estado.HUNDIDO){
         return "X";
     }
         return null;

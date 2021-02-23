@@ -12,7 +12,5 @@ public class Mina extends Barco {
         setVida(1);
     }
 
-    public static String getColor() {
-        return color;
-    }
+
 }

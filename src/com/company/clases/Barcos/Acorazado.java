@@ -12,7 +12,4 @@ public class Acorazado extends Barco {
         setVida(4);
     }
 
-    public static String getColor() {
-        return color;
-    }
 }

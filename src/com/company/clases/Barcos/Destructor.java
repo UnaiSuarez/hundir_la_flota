@@ -12,7 +12,5 @@ public class Destructor extends Barco {
         setVida(2);
     }
 
-    public static String getColor() {
-        return color;
-    }
+
 }
