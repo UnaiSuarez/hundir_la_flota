@@ -92,4 +92,7 @@ public class Jugador {
         return true;
     }
 
+    public void setGestionable(boolean gestionable) {
+        this.gestionable = gestionable;
+    }
 }

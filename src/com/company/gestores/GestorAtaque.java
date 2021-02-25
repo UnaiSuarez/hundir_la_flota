@@ -22,6 +22,7 @@ public class GestorAtaque {
     String ANSI_RED = "\u001B[33m";
     int tirada = 0;
     public void ataques(Jugador jugador1, Jugador jugador2){
+      //  jugador1.setGestionable(true);
             while (jugador1.getVida() >= 0 || jugador2.getVida() >=0){
                 if (jugador1.getVida() == 0){
                     System.out.println("el jugador "+jugador1.getNombre()+" ha perdido");
@@ -90,13 +91,18 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                     System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
                     System.out.println("hundido");
                     cambioTablero(jugadorAtacado,x,y);
-                    mostrarTableros(jugadorAtaque);
+                    if (muestraTablero(jugadorAtaque, jugadorAtacado)){
+                        mostrarTableros(jugadorAtaque);
+                    }
+
                 }
                 else {
                     System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
                     System.out.println("tocado");
                     cambioTablero(jugadorAtacado,x,y);
-                    mostrarTableros(jugadorAtaque);
+                    if (muestraTablero(jugadorAtaque,jugadorAtacado)){
+                        mostrarTableros(jugadorAtaque);
+                    }
                 }
 
                 jugadorAtacado.restaVida();
@@ -108,7 +114,9 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
             jugadorAtaque.getTableroAtaque()[x][y] = 1;
             System.out.println(jugadorAtaque.getNombre() + " ha atacado la posicion x:" + x + ", y:" + y+" en la tirada:"+tirada);
             System.out.println("agua");
-            mostrarTableros(jugadorAtaque);
+            if (muestraTablero(jugadorAtaque,jugadorAtacado)){
+                mostrarTableros(jugadorAtaque);
+            }
         }
     }
     else {
@@ -116,6 +124,16 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
         return false;
     }
     return true;
+}
+
+private boolean muestraTablero(Jugador jugadorAtaque, Jugador jugadorAtacado){
+        if (!jugadorAtaque.isGestionable() && !jugadorAtacado.isGestionable()){
+            return true;
+        }
+        else if (tirada%2==0 && jugadorAtaque.isGestionable() && !jugadorAtacado.isGestionable()){
+            return true;
+        }
+        return false;
 }
 
 private void mostrarTableros(Jugador jugadorAtaque){
