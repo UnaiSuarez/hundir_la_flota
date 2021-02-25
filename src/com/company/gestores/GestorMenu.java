@@ -2,10 +2,12 @@ package com.company.gestores;
 
 import com.company.clases.Jugador;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.SortedMap;
 
 public class GestorMenu {
+    private ArrayList<Jugador> partidas;
     Scanner scanner = new Scanner(System.in);
     public void menu(){
         limpiarPantalla();
@@ -16,6 +18,9 @@ public class GestorMenu {
         String opcion = scanner.nextLine();
         if (opcion.equals("1")){
             menuModo();
+        }
+        else if (opcion.equals("2")){
+
         }
         else {
             System.out.println(opcion + ", No es una opcion");
@@ -70,4 +75,6 @@ public class GestorMenu {
             System.out.println("");
         }
     }
+
+
 }

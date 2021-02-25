@@ -223,8 +223,7 @@ private void colocarBarcosBot(Class type, Jugador jugador){
     }
 
     public void mostrarTablero(Jugador jugador){
-        System.out.println("tablero: "+jugador.getNombre());
-        System.out.print(" ");
+        System.out.println(" ");
         for (int i = 0; i < jugador.getTamTablero(); i++) {
             System.out.print(" "+i);
         }

@@ -5,7 +5,9 @@ import com.company.clases.Barcos.Destructor;
 import com.company.clases.Barcos.Mina;
 import com.company.clases.Barcos.Portaaviones;
 
-public class Jugador {
+import java.io.Serializable;
+
+public class Jugador implements Serializable {
     private String nombre;
     private boolean gestionable;
     int tamTablero = 10;

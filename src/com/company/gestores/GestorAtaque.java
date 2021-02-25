@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class GestorAtaque {
 
     GestorColocacion gestorColocacionJugador = new GestorColocacion();
+    GestorMenu gestorMenu = new GestorMenu();
     String ANSI_RESET = "\u001B[0m";
     String ANSI_BLUE = "\u001B[34m";
     String ANSI_WHITE = "\033[0m";
@@ -61,6 +62,7 @@ public class GestorAtaque {
     }
 
 private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
+
     try {
         TimeUnit.MILLISECONDS.sleep(1);
     } catch (InterruptedException e) {
@@ -81,48 +83,57 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
          x = random.nextInt(10);
          y = random.nextInt(10);
     }
-    if (jugadorAtaque.getTableroAtaque()[x][y] == 0 ){
-        if (jugadorAtacado.getTablero()[x][y] != null){
-            jugadorAtaque.getTableroAtaque()[x][y] = 2;
-            if (jugadorAtacado.getTablero()[x][y].getVida() > 0){
-                jugadorAtacado.getTablero()[x][y].restaVida();
-                System.out.println("\n");
-                if (jugadorAtacado.getTablero()[x][y].getVida() == 0) {
-                    System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
-                    System.out.println("hundido");
-                    cambioTablero(jugadorAtacado,x,y);
-                    if (muestraTablero(jugadorAtaque, jugadorAtacado)){
-                        mostrarTableros(jugadorAtaque);
+    if (x <= 9 && x >= 0 && y <= 9 && y >= 0){
+        if (jugadorAtaque.getTableroAtaque()[x][y] == 0 ){
+            if (jugadorAtacado.getTablero()[x][y] != null){
+                jugadorAtaque.getTableroAtaque()[x][y] = 2;
+                if (jugadorAtacado.getTablero()[x][y].getVida() > 0){
+                    jugadorAtacado.getTablero()[x][y].restaVida();
+                    System.out.println("\n");
+                    if (jugadorAtacado.getTablero()[x][y].getVida() == 0) {
+                        System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
+                        System.out.println("hundido");
+                        cambioTablero(jugadorAtacado,x,y);
+                        if (muestraTablero(jugadorAtaque, jugadorAtacado)){
+                            mostrarTableros(jugadorAtaque);
+                        }
+
+                    }
+                    else {
+                        System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
+                        System.out.println("tocado");
+                        cambioTablero(jugadorAtacado,x,y);
+                        if (muestraTablero(jugadorAtaque,jugadorAtacado)){
+                            mostrarTableros(jugadorAtaque);
+                        }
                     }
 
-                }
-                else {
-                    System.out.println(jugadorAtaque.getNombre()+" ha atacado la posicion x:"+x+", y:"+y+" en la tirada:"+tirada);
-                    System.out.println("tocado");
-                    cambioTablero(jugadorAtacado,x,y);
-                    if (muestraTablero(jugadorAtaque,jugadorAtacado)){
-                        mostrarTableros(jugadorAtaque);
-                    }
+                    jugadorAtacado.restaVida();
                 }
 
-                jugadorAtacado.restaVida();
             }
-
+            else {
+                System.out.println("\n");
+                jugadorAtaque.getTableroAtaque()[x][y] = 1;
+                System.out.println(jugadorAtaque.getNombre() + " ha atacado la posicion x:" + x + ", y:" + y+" en la tirada:"+tirada);
+                System.out.println("agua");
+                if (muestraTablero(jugadorAtaque,jugadorAtacado)){
+                    mostrarTableros(jugadorAtaque);
+                }
+            }
         }
         else {
-            System.out.println("\n");
-            jugadorAtaque.getTableroAtaque()[x][y] = 1;
-            System.out.println(jugadorAtaque.getNombre() + " ha atacado la posicion x:" + x + ", y:" + y+" en la tirada:"+tirada);
-            System.out.println("agua");
-            if (muestraTablero(jugadorAtaque,jugadorAtacado)){
-                mostrarTableros(jugadorAtaque);
+            if (jugadorAtaque.isGestionable()){
+                System.out.println(jugadorAtaque.getNombre()+" ha repetido el tiro, "+tirada);
             }
+            return false;
         }
     }
     else {
-        System.out.println(jugadorAtaque.getNombre()+" ha repetido el tiro, "+tirada);
-        return false;
+        System.out.println("No es posible esa posicion");
+        ataques(jugadorAtaque,jugadorAtacado);
     }
+
     return true;
 }
 
@@ -137,8 +148,7 @@ private boolean muestraTablero(Jugador jugadorAtaque, Jugador jugadorAtacado){
 }
 
 private void mostrarTableros(Jugador jugadorAtaque){
-    System.out.println("tablero basrcos:");
-        gestorColocacionJugador.mostrarTablero(jugadorAtaque);
+    System.out.println("Tablero:"+jugadorAtaque.getNombre());
     System.out.println("tablero ataque: ");
     System.out.print(" ");
     for (int i = 0; i < jugadorAtaque.getTamTablero(); i++) {
@@ -161,6 +171,8 @@ private void mostrarTableros(Jugador jugadorAtaque){
         }
         System.out.println("");
     }
+    System.out.println("Tablero barcos:");
+    gestorColocacionJugador.mostrarTablero(jugadorAtaque);
 }
 
 private void cambioTablero(Jugador jugador, int x, int y){
