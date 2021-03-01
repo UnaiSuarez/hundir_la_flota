@@ -19,6 +19,9 @@ public class Jugador implements Serializable {
     private int numDestructor = 3;
     private int numPortaaviones = 1;
     private int vida = 24;
+    private boolean tocado = false;
+    private int tiradax = 0;
+    private int tiraday = 0;
 
 
     public Jugador(boolean gestionable, String nombre) {
@@ -89,12 +92,40 @@ public class Jugador implements Serializable {
 
     public int[][] getTableroAtaque(){ return tableroAtaque;}
 
-    public Boolean modoJuego(){
-        this.gestionable = true;
-        return true;
+    public boolean isTocado() {
+        return tocado;
+    }
+
+    public void setTocado(boolean tocado) {
+        this.tocado = tocado;
     }
 
     public void setGestionable(boolean gestionable) {
         this.gestionable = gestionable;
+    }
+
+    public int getTiradax() {
+        return tiradax;
+    }
+
+    public void setTiradax(int tiradax) {
+        this.tiradax = tiradax;
+    }
+
+    public int getTiraday() {
+        return tiraday;
+    }
+
+    public void setTiraday(int tiraday) {
+        this.tiraday = tiraday;
+    }
+
+    @Override
+    public String toString() {
+        return "Jugador{" +
+                "x=" + tiradax +
+                "y=" + tiraday +
+                "vida=" + vida +
+                '}';
     }
 }

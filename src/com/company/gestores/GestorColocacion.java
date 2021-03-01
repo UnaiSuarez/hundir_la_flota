@@ -133,7 +133,7 @@ public class GestorColocacion {
 
 
 private void colocarBarcosBot(Class type, Jugador jugador){
-    Barco barco = generateBot(type);
+    Barco barco = generateBot(type, jugador);
 
     if (barco.getOrientacion() == Orientacion.HORIZONTAL){
             boolean opcion = true;
@@ -193,10 +193,10 @@ private void colocarBarcosBot(Class type, Jugador jugador){
         return generateAll(type,x,y,orientacion);
     }
 
-    private Barco generateBot(Class type){
+    private Barco generateBot(Class type, Jugador jugador){
         Random random = new Random();
-        int x = random.nextInt(10);
-        int y = random.nextInt(10);
+        int x = random.nextInt(jugador.getTamTablero());
+        int y = random.nextInt(jugador.getTamTablero());
         Boolean e = new Random().nextBoolean();
         boolean posicion = e.booleanValue();
         Orientacion orientacion = Orientacion.VERTICAL;

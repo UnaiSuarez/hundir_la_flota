@@ -32,6 +32,9 @@ public class GestorMenu {
         limpiarPantalla();
         System.out.println("Has elegido modo de juego:");
         System.out.println("--------------------------");
+        System.out.println("Elije dificultad:\n1) Facil\n2) Dificil\nOpción:");
+        String dificultad = scanner.nextLine();
+        limpiarPantalla();
         System.out.println("1) Jugador VS Bot\n2) Bot VS Bot\n3) Atras");
         System.out.print("Opcion:");
         String opcion = scanner.nextLine();
@@ -45,7 +48,7 @@ public class GestorMenu {
             Jugador jugador = new Jugador(true,nombre);
             Jugador bot = new Jugador(false,"bot");
             GestorColocacion gestorColocacionJugador = new GestorColocacion();
-            GestorAtaque gestorAtaque = new GestorAtaque();
+            GestorAtaque gestorAtaque = new GestorAtaque(dificultad);
             gestorColocacionJugador.menuPrincipal(jugador);
             gestorColocacionJugador.menuPrincipal(bot);
             gestorAtaque.ataques(jugador,bot);
@@ -56,7 +59,7 @@ public class GestorMenu {
             Jugador bot1 = new Jugador(false,"bot1");
             Jugador bot2 = new Jugador(false,"bot2");
             GestorColocacion gestorColocacionJugador = new GestorColocacion();
-            GestorAtaque gestorAtaque = new GestorAtaque();
+            GestorAtaque gestorAtaque = new GestorAtaque(dificultad);
             gestorColocacionJugador.menuPrincipal(bot1);
             gestorColocacionJugador.menuPrincipal(bot2);
             gestorAtaque.ataques(bot1,bot2);

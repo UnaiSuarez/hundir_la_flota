@@ -14,6 +14,11 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class GestorAtaque {
+private String dificultad;
+
+    public GestorAtaque(String dificultad) {
+        this.dificultad = dificultad;
+    }
 
     GestorColocacion gestorColocacionJugador = new GestorColocacion();
     GestorMenu gestorMenu = new GestorMenu();
@@ -45,7 +50,6 @@ public class GestorAtaque {
                     System.out.println("--------------------------------------------------");
                     break;
                 }
-
                 else {
                     if (tirada%2 == 0){
                         if(ataque(jugador1,jugador2)){
@@ -62,9 +66,8 @@ public class GestorAtaque {
     }
 
 private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
-
     try {
-        TimeUnit.MILLISECONDS.sleep(1);
+        TimeUnit.MILLISECONDS.sleep(30);
     } catch (InterruptedException e) {
         e.printStackTrace();
     }
@@ -80,10 +83,38 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
         y = scanner.nextInt();
     }
     else {
-         x = random.nextInt(10);
-         y = random.nextInt(10);
+        x = random.nextInt(jugadorAtaque.getTamTablero());
+        y = random.nextInt(jugadorAtaque.getTamTablero());
+        if (dificultad.equals("2")){
+            if (jugadorAtaque.isTocado()){
+                boolean posicion = random.nextBoolean();
+                boolean posicionXoY = random.nextBoolean();
+                if (posicionXoY){
+                    if (posicion){
+                        x = jugadorAtaque.getTiradax() +1;
+                        y = jugadorAtaque.getTiraday();
+                    }
+                    else {
+                        x = jugadorAtaque.getTiradax() -1;
+                        y = jugadorAtaque.getTiraday();;
+                    }
+
+                }
+                else {
+                    if (posicion){
+                        y = jugadorAtaque.getTiraday() +1;
+                        x = jugadorAtaque.getTiradax();
+                    }
+                    else {
+                        y = jugadorAtaque.getTiraday() -1;
+                        x = jugadorAtaque.getTiradax();
+                    }
+
+                }
+            }
+        }
     }
-    if (x <= 9 && x >= 0 && y <= 9 && y >= 0){
+    if (x < jugadorAtaque.getTamTablero() && x >= 0 && y < jugadorAtaque.getTamTablero() && y >= 0){
         if (jugadorAtaque.getTableroAtaque()[x][y] == 0 ){
             if (jugadorAtacado.getTablero()[x][y] != null){
                 jugadorAtaque.getTableroAtaque()[x][y] = 2;
@@ -97,6 +128,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                         if (muestraTablero(jugadorAtaque, jugadorAtacado)){
                             mostrarTableros(jugadorAtaque);
                         }
+                        jugadorAtaque.setTocado(false);
 
                     }
                     else {
@@ -106,6 +138,10 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                         if (muestraTablero(jugadorAtaque,jugadorAtacado)){
                             mostrarTableros(jugadorAtaque);
                         }
+                        jugadorAtaque.setTocado(true);
+                        jugadorAtaque.setTiradax(x);
+                        jugadorAtaque.setTiraday(y);
+
                     }
 
                     jugadorAtacado.restaVida();
@@ -120,18 +156,21 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                 if (muestraTablero(jugadorAtaque,jugadorAtacado)){
                     mostrarTableros(jugadorAtaque);
                 }
+                jugadorAtaque.setTocado(false);
             }
         }
         else {
             if (jugadorAtaque.isGestionable()){
                 System.out.println(jugadorAtaque.getNombre()+" ha repetido el tiro, "+tirada);
             }
+            jugadorAtaque.setTocado(false);
             return false;
         }
     }
     else {
-        System.out.println("No es posible esa posicion");
-        ataques(jugadorAtaque,jugadorAtacado);
+        if (jugadorAtaque.isGestionable()){
+            System.out.println("No es posible esa posicion");
+        }
     }
 
     return true;
@@ -158,10 +197,10 @@ private void mostrarTableros(Jugador jugadorAtaque){
     for(int x = 0; x < jugadorAtaque.getTamTablero(); x++){
         System.out.print(x+" ");
         for(int y = 0; y < jugadorAtaque.getTamTablero(); y++){
-            if(jugadorAtaque.getTableroAtaque()[y][x] == 1){
+            if(jugadorAtaque.getTableroAtaque()[x][y] == 1){
                 System.out.print(ANSI_WHITE+"█"+ANSI_RESET);
             }
-            else if (jugadorAtaque.getTableroAtaque()[y][x] == 2){
+            else if (jugadorAtaque.getTableroAtaque()[x][y] == 2){
                 System.out.print(ANSI_RED+"█"+ANSI_RESET);
             }
             else{
