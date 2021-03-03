@@ -28,7 +28,6 @@ private String dificultad;
     String ANSI_RED = "\u001B[33m";
     int tirada = 0;
     public void ataques(Jugador jugador1, Jugador jugador2){
-      //  jugador1.setGestionable(true);
             while (jugador1.getVida() >= 0 || jugador2.getVida() >=0){
                 if (jugador1.getVida() == 0){
                     System.out.println("el jugador "+jugador1.getNombre()+" ha perdido");
