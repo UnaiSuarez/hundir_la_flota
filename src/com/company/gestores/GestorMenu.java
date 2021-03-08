@@ -1,6 +1,7 @@
 package com.company.gestores;
 
 import com.company.clases.DAO.DAOFactory;
+import com.company.clases.Dificultad;
 import com.company.clases.Jugador;
 import com.company.clases.Partida;
 
@@ -54,8 +55,23 @@ public class GestorMenu {
         limpiarPantalla();
         System.out.println("Has elegido modo de juego:");
         System.out.println("--------------------------");
-        System.out.println("Elije dificultad:\n1) Facil\n2) Dificil\nOpción:");
-        String dificultad = scanner.nextLine();
+        Dificultad dificultad = null;
+        System.out.println("La ultima dificultad fué: "+DAOFactory.getInstance().getDaoDificultad().dameDificultad()+"\n¿Desea cambiarla?");
+        String dificultadOpcion = scanner.nextLine();
+        if (dificultadOpcion.equals("si")){
+            System.out.println("Elije dificultad:\n1) Facil\n2) Dificil\nOpción:");
+            String dif = scanner.nextLine();
+            if (dif.equals("1")){
+                dificultad = Dificultad.FACIL;
+            }
+            else {
+                dificultad = Dificultad.DIFICIL;
+            }
+        }
+        else {
+            dificultad = DAOFactory.getInstance().getDaoDificultad().dameDificultad();
+        }
+
         limpiarPantalla();
         System.out.println("1) Jugador VS Bot\n2) Bot VS Bot\n3) Atras");
         System.out.print("Opcion:");

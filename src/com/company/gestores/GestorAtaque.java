@@ -1,14 +1,11 @@
 package com.company.gestores;
 
-import com.company.clases.Barco;
+import com.company.clases.*;
 import com.company.clases.Barcos.Acorazado;
 import com.company.clases.Barcos.Destructor;
 import com.company.clases.Barcos.Mina;
 import com.company.clases.Barcos.Portaaviones;
 import com.company.clases.DAO.DAOFactory;
-import com.company.clases.Jugador;
-import com.company.clases.Orientacion;
-import com.company.clases.Partida;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,11 +16,11 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class GestorAtaque {
-private String dificultad;
+public class GestorAtaque implements  Serializable{
+private Dificultad dificultad;
     private List<Partida> partidas;
 
-    public GestorAtaque(String dificultad) {
+    public GestorAtaque(Dificultad dificultad) {
         this.dificultad = dificultad;
     }
 
@@ -45,6 +42,7 @@ private String dificultad;
                     Partida partida = new Partida(jugador1,jugador2, LocalDate.now());
                     partidas.add(partida);
                     DAOFactory.getInstance().getDaoPartidas().guardaPartida(partidas);
+                    DAOFactory.getInstance().getDaoDificultad().guardaDificultad(dificultad);
                     System.out.println("Partida guardada");
                     break;
                 }
@@ -59,6 +57,7 @@ private String dificultad;
                     Partida partida = new Partida(jugador1,jugador2, LocalDate.now());
                     partidas.add(partida);
                     DAOFactory.getInstance().getDaoPartidas().guardaPartida(partidas);
+                    DAOFactory.getInstance().getDaoDificultad().guardaDificultad(dificultad);
                     System.out.println("Partida guardada");
                     break;
                 }
@@ -98,7 +97,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
     else {
         x = random.nextInt(jugadorAtaque.getTamTablero());
         y = random.nextInt(jugadorAtaque.getTamTablero());
-        if (dificultad.equals("2")){
+        if (dificultad.equals(Dificultad.DIFICIL)){
             if (jugadorAtaque.isTocado()){
                 boolean posicion = random.nextBoolean();
                 boolean posicionXoY = random.nextBoolean();
