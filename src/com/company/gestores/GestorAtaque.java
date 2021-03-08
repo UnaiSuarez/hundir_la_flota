@@ -5,16 +5,23 @@ import com.company.clases.Barcos.Acorazado;
 import com.company.clases.Barcos.Destructor;
 import com.company.clases.Barcos.Mina;
 import com.company.clases.Barcos.Portaaviones;
+import com.company.clases.DAO.DAOFactory;
 import com.company.clases.Jugador;
 import com.company.clases.Orientacion;
+import com.company.clases.Partida;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class GestorAtaque {
 private String dificultad;
+    private List<Partida> partidas;
 
     public GestorAtaque(String dificultad) {
         this.dificultad = dificultad;
@@ -22,31 +29,37 @@ private String dificultad;
 
     GestorColocacion gestorColocacionJugador = new GestorColocacion();
     GestorMenu gestorMenu = new GestorMenu();
-    String ANSI_RESET = "\u001B[0m";
-    String ANSI_BLUE = "\u001B[34m";
-    String ANSI_WHITE = "\033[0m";
-    String ANSI_RED = "\u001B[33m";
+
     int tirada = 0;
     public void ataques(Jugador jugador1, Jugador jugador2){
+        partidas = DAOFactory.getInstance().getDaoPartidas().damePartidas();
             while (jugador1.getVida() >= 0 || jugador2.getVida() >=0){
                 if (jugador1.getVida() == 0){
                     System.out.println("el jugador "+jugador1.getNombre()+" ha perdido");
                     System.out.println("--------------------------------------------------");
                     System.out.println("los tableros finales han quedado asi");
-                    mostrarTableros(jugador1);
+                    gestorColocacionJugador.mostrarTableros(jugador1);
                     System.out.println("--------------------------------------------------");
-                    mostrarTableros(jugador2);
+                    gestorColocacionJugador.mostrarTableros(jugador2);
                     System.out.println("--------------------------------------------------");
+                    Partida partida = new Partida(jugador1,jugador2, LocalDate.now());
+                    partidas.add(partida);
+                    DAOFactory.getInstance().getDaoPartidas().guardaPartida(partidas);
+                    System.out.println("Partida guardada");
                     break;
                 }
                 else if (jugador2.getVida() == 0){
                     System.out.println("el jugador "+jugador2.getNombre()+" ha perdido");
                     System.out.println("--------------------------------------------------");
                     System.out.println("los tableros finales han quedado asi");
-                    mostrarTableros(jugador2);
+                    gestorColocacionJugador.mostrarTableros(jugador2);
                     System.out.println("--------------------------------------------------");
-                    mostrarTableros(jugador1);
+                    gestorColocacionJugador.mostrarTableros(jugador1);
                     System.out.println("--------------------------------------------------");
+                    Partida partida = new Partida(jugador1,jugador2, LocalDate.now());
+                    partidas.add(partida);
+                    DAOFactory.getInstance().getDaoPartidas().guardaPartida(partidas);
+                    System.out.println("Partida guardada");
                     break;
                 }
                 else {
@@ -62,11 +75,12 @@ private String dificultad;
                     }
                 }
             }
+            gestorMenu.menu();
     }
 
 private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
     try {
-        TimeUnit.MILLISECONDS.sleep(30);
+        TimeUnit.MILLISECONDS.sleep(1);
     } catch (InterruptedException e) {
         e.printStackTrace();
     }
@@ -125,7 +139,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                         System.out.println("hundido");
                         cambioTablero(jugadorAtacado,x,y);
                         if (muestraTablero(jugadorAtaque, jugadorAtacado)){
-                            mostrarTableros(jugadorAtaque);
+                            gestorColocacionJugador.mostrarTablero(jugadorAtaque);
                         }
                         jugadorAtaque.setTocado(false);
 
@@ -135,7 +149,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                         System.out.println("tocado");
                         cambioTablero(jugadorAtacado,x,y);
                         if (muestraTablero(jugadorAtaque,jugadorAtacado)){
-                            mostrarTableros(jugadorAtaque);
+                            gestorColocacionJugador.mostrarTablero(jugadorAtaque);
                         }
                         jugadorAtaque.setTocado(true);
                         jugadorAtaque.setTiradax(x);
@@ -153,7 +167,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                 System.out.println(jugadorAtaque.getNombre() + " ha atacado la posicion x:" + x + ", y:" + y+" en la tirada:"+tirada);
                 System.out.println("agua");
                 if (muestraTablero(jugadorAtaque,jugadorAtacado)){
-                    mostrarTableros(jugadorAtaque);
+                    gestorColocacionJugador.mostrarTablero(jugadorAtaque);
                 }
                 jugadorAtaque.setTocado(false);
             }
@@ -185,33 +199,7 @@ private boolean muestraTablero(Jugador jugadorAtaque, Jugador jugadorAtacado){
         return false;
 }
 
-private void mostrarTableros(Jugador jugadorAtaque){
-    System.out.println("Tablero:"+jugadorAtaque.getNombre());
-    System.out.println("tablero ataque: ");
-    System.out.print(" ");
-    for (int i = 0; i < jugadorAtaque.getTamTablero(); i++) {
-        System.out.print(" "+i);
-    }
-    System.out.println();
-    for(int x = 0; x < jugadorAtaque.getTamTablero(); x++){
-        System.out.print(x+" ");
-        for(int y = 0; y < jugadorAtaque.getTamTablero(); y++){
-            if(jugadorAtaque.getTableroAtaque()[x][y] == 1){
-                System.out.print(ANSI_WHITE+"█"+ANSI_RESET);
-            }
-            else if (jugadorAtaque.getTableroAtaque()[x][y] == 2){
-                System.out.print(ANSI_RED+"█"+ANSI_RESET);
-            }
-            else{
-                System.out.print(ANSI_BLUE+"█"+ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println("");
-    }
-    System.out.println("Tablero barcos:");
-    gestorColocacionJugador.mostrarTablero(jugadorAtaque);
-}
+
 
 private void cambioTablero(Jugador jugador, int x, int y){
     Orientacion orientacion = jugador.getTablero()[x][y].getOrientacion();

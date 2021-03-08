@@ -1,6 +1,8 @@
 package com.company.clases.Barcos;
 
-public enum Estado {
+import java.io.Serializable;
+
+public enum Estado implements Serializable {
     OK,
     TOCADO,
     HUNDIDO

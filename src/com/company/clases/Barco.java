@@ -3,9 +3,10 @@ package com.company.clases;
 import com.company.clases.Barcos.Estado;
 
 import javax.print.attribute.standard.OrientationRequested;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Barco {
+public abstract class Barco implements Serializable {
     protected Integer numCeldas, x, y,vida;
     protected Orientacion orientacion;
     String color;

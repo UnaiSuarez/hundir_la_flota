@@ -12,9 +12,11 @@ import java.util.Scanner;
 
 public class GestorColocacion {
 
-
     String ANSI_RESET = "\u001B[0m";
     String ANSI_BLUE = "\u001B[34m";
+    String ANSI_WHITE = "\033[0m";
+    String ANSI_RED = "\u001B[33m";
+
 
 
 
@@ -252,6 +254,35 @@ private void colocarBarcosBot(Class type, Jugador jugador){
             System.out.println("");
         }
     }
+
+    public void mostrarTableros(Jugador jugadorAtaque){
+        System.out.println("Tablero:"+jugadorAtaque.getNombre());
+        System.out.println("tablero ataque: ");
+        System.out.print(" ");
+        for (int i = 0; i < jugadorAtaque.getTamTablero(); i++) {
+            System.out.print(" "+i);
+        }
+        System.out.println();
+        for(int x = 0; x < jugadorAtaque.getTamTablero(); x++){
+            System.out.print(x+" ");
+            for(int y = 0; y < jugadorAtaque.getTamTablero(); y++){
+                if(jugadorAtaque.getTableroAtaque()[x][y] == 1){
+                    System.out.print(ANSI_WHITE+"█"+ANSI_RESET);
+                }
+                else if (jugadorAtaque.getTableroAtaque()[x][y] == 2){
+                    System.out.print(ANSI_RED+"█"+ANSI_RESET);
+                }
+                else{
+                    System.out.print(ANSI_BLUE+"█"+ANSI_RESET);
+                }
+                System.out.print(" ");
+            }
+            System.out.println("");
+        }
+        System.out.println("Tablero barcos:");
+        mostrarTablero(jugadorAtaque);
+    }
+
 
     private String comprobarDaño(Barco barco, int x, int y){
     int desfase = 0;

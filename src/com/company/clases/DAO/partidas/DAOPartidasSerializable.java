@@ -4,10 +4,11 @@ import com.company.clases.Partida;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DAOPartidasSerializable implements DAOPartidas {
 
-    public void guardaPartida(ArrayList<Partida> partida) {
+    public void guardaPartida(List<Partida> partida) {
         try {
             FileOutputStream fos = new FileOutputStream("partidas");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -20,16 +21,16 @@ public class DAOPartidasSerializable implements DAOPartidas {
 
     }
 
-    public ArrayList damePartidas(){
-        ArrayList listaPartidas = new ArrayList<>();
+    public List<Partida> damePartidas(){
+        List<Partida> listaPartidas = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream("partidas");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            listaPartidas = (ArrayList) ois.readObject();
+            listaPartidas = (List<Partida>) ois.readObject();
             ois.close();
             fis.close();
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println("No existen partidas guardadas");
         }
 
         return listaPartidas;
