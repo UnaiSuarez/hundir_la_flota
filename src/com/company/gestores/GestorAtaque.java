@@ -138,7 +138,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                         System.out.println("hundido");
                         cambioTablero(jugadorAtacado,x,y);
                         if (muestraTablero(jugadorAtaque, jugadorAtacado)){
-                            gestorColocacionJugador.mostrarTablero(jugadorAtaque);
+                            gestorColocacionJugador.mostrarTableros(jugadorAtaque);
                         }
                         jugadorAtaque.setTocado(false);
 
@@ -148,7 +148,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                         System.out.println("tocado");
                         cambioTablero(jugadorAtacado,x,y);
                         if (muestraTablero(jugadorAtaque,jugadorAtacado)){
-                            gestorColocacionJugador.mostrarTablero(jugadorAtaque);
+                            gestorColocacionJugador.mostrarTableros(jugadorAtaque);
                         }
                         jugadorAtaque.setTocado(true);
                         jugadorAtaque.setTiradax(x);
@@ -166,7 +166,7 @@ private Boolean ataque(Jugador jugadorAtaque,Jugador jugadorAtacado){
                 System.out.println(jugadorAtaque.getNombre() + " ha atacado la posicion x:" + x + ", y:" + y+" en la tirada:"+tirada);
                 System.out.println("agua");
                 if (muestraTablero(jugadorAtaque,jugadorAtacado)){
-                    gestorColocacionJugador.mostrarTablero(jugadorAtaque);
+                    gestorColocacionJugador.mostrarTableros(jugadorAtaque);
                 }
                 jugadorAtaque.setTocado(false);
             }
